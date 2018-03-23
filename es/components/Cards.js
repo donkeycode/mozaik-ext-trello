@@ -43,7 +43,6 @@ var Cards = function (_Component) {
             null,
             React.createElement(WidgetHeader, {
                 title: title || 'Trello cards',
-                icon: GithubIcon,
                 count: count
             }),
             React.createElement(

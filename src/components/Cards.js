@@ -32,7 +32,6 @@ export default class Cards extends Component {
             <Widget>
                 <WidgetHeader
                     title={title || 'Trello cards'}
-                    icon={GithubIcon}
                     count={count}
                 />
                 <WidgetBody>
