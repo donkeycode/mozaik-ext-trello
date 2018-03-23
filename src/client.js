@@ -29,13 +29,36 @@ const client = mozaik => {
             resolveWithFullResponse: true
         }
 
+        console.log(options);
         return request(options)
     }
 
     const apiCalls = {
 		cards({ listId }) {
 			return buildApiRequest(`/lists/${listId}/cards`)
-		}
+        }
+        // cards({ listId }) {
+        //     return buildApiRequest(`/lists/${listId}/cards`)
+        //         .then((res) => {
+        //             const idMembers = [];
+        //             res.body.foreach((project) => {
+        //                 project.idMembers.foreach((idMember) => {
+        //                     if (idMembers.indexOf(idMember) == -1) {
+        //                         idMembers.push(idMember);
+        //                     }
+        //                 });
+        //             });
+        //             return Promise.all(
+        //                 idMembers.map((id) => {
+        //                     return apiCalls.member(Object.assign({ idMember: id }));
+        //                 })
+        //             )
+        //         })
+        // },
+
+        // member({ idMember }) {
+        //     return buildApiRequest(`/members/${idMember}`);
+        // }
     }
 
     return apiCalls

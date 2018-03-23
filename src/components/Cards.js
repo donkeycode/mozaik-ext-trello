@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TrapApiError, WidgetHeader, WidgetLoader, Widget, WidgetBody } from '@mozaik/ui';
 
+const request = require('request-promise-native')
+
 export default class Cards extends Component {
     static PropTypes = {
         listId: PropTypes.string.isRequired,
@@ -9,7 +11,7 @@ export default class Cards extends Component {
         apiData: PropTypes.shape({
             Cards: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
         }),
-        apiError: PropTypes.object
+        apiError: PropTypes.object,
     }
 
     static getApiRequest({ listId }) {
@@ -20,12 +22,23 @@ export default class Cards extends Component {
     }
 
     render() {
-        const { apiData, apiError } = this.props;
+        const { apiData, apiError, title } = this.props;
 
         let body = <WidgetLoader/>;
         let count = 0;
-        if (apiData) {
-			console.log(apiData);
+        if (apiData && apiData.body.length) {
+            count = apiData.body.length;
+            console.log(apiData);
+            body = (
+                <div id="projects">
+                    {apiData.body.map(project =>
+                        <div className="project">
+                            <p>{project.name}</p>
+                            <p>{project.due}</p>
+                        </div>
+                    )}
+                </div>
+            )
         }
 
         return (

@@ -8,6 +8,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TrapApiError, WidgetHeader, WidgetLoader, Widget, WidgetBody } from '@mozaik/ui';
 
+var request = require('request-promise-native');
+
 var Cards = function (_Component) {
     _inherits(Cards, _Component);
 
@@ -29,13 +31,35 @@ var Cards = function (_Component) {
     Cards.prototype.render = function render() {
         var _props = this.props,
             apiData = _props.apiData,
-            apiError = _props.apiError;
+            apiError = _props.apiError,
+            title = _props.title;
 
 
         var body = React.createElement(WidgetLoader, null);
         var count = 0;
-        if (apiData) {
+        if (apiData && apiData.body.length) {
+            count = apiData.body.length;
             console.log(apiData);
+            body = React.createElement(
+                'div',
+                { id: 'projects' },
+                apiData.body.map(function (project) {
+                    return React.createElement(
+                        'div',
+                        { className: 'project' },
+                        React.createElement(
+                            'p',
+                            null,
+                            project.name
+                        ),
+                        React.createElement(
+                            'p',
+                            null,
+                            project.due
+                        )
+                    );
+                })
+            );
         }
 
         return React.createElement(
