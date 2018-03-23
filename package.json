@@ -1,22 +1,17 @@
 {
-  "name": "@mozaik/ext-github",
-  "version": "2.0.0-alpha.6",
-  "description": "Mozaik github widgets",
+  "name": "@donkeycode/ext-trello",
+  "version": "1.0.0",
+  "description": "Mozaik Trello widgets",
   "repository": {
     "type": "git",
-    "url": "git://github.com/plouc/mozaik-ext-github"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Donkey Code",
-    "url": "https://github.com/donkeycode"
+    "url": "git://github.com/donkeycode/mozaik-ext-trello"
   },
   "homepage": "https://github.com/donkeycode/mozaik-ext-trello",
   "main": "./lib/components/index.js",
   "module": "es/components/index.js",
   "jsnext:main": "es/components/index.js",
   "keywords": [
-    "github",
+    "trello",
     "mozaik",
     "widget",
     "extension",
@@ -107,4 +102,3 @@
     "autoFix": false
   }
 }
-

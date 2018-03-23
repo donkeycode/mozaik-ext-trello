@@ -14,17 +14,19 @@ const config = require('./config')
 const client = mozaik => {
     mozaik.loadApiConfig(config)
 
-    const buildApiRequest = (path, params) => {
-        const url = config.get('github.baseUrl')
+    const buildApiRequest = (path) => {
+        const url = config.get('trello.baseUrl')
+        const key = config.get('trello.key');
+        const token = config.get('trello.token');
 
         const options = {
             uri: `${url}${path}`,
+            qs: {
+                key: key,
+                token: token
+            },
             json: true,
             resolveWithFullResponse: true
-        }
-
-        if (config.get('github.token') !== '') {
-            options.headers.Authorization = `token ${config.get('github.token')}`
         }
 
         return request(options)

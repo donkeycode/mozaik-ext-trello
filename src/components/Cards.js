@@ -12,12 +12,7 @@ export default class Cards extends Component {
         apiError: PropTypes.object
     }
 
-    constructor(props) {
-        super(props);
-
-    }
-
-    static getApiRequest({ organisation }) {
+    static getApiRequest({ listId }) {
         return {
             id: `trello.cards.${listId}`,
             params: { listId }
