@@ -4,10 +4,6 @@ const request = require('request-promise-native')
 const chalk = require('chalk')
 const config = require('./config')
 
-// https://developer.github.com/v3/#user-agent-required
-//const userAgent = 'donkeycode/ext-trello'
-//const previewAcceptHeader = 'application/vnd.github.spiderman-preview'
-
 /**
  * @param {Mozaik} mozaik
  */
@@ -29,36 +25,41 @@ const client = mozaik => {
             resolveWithFullResponse: true
         }
 
-        console.log(options);
         return request(options)
     }
 
     const apiCalls = {
-		cards({ listId }) {
-			return buildApiRequest(`/lists/${listId}/cards`)
-        }
-        // cards({ listId }) {
-        //     return buildApiRequest(`/lists/${listId}/cards`)
-        //         .then((res) => {
-        //             const idMembers = [];
-        //             res.body.foreach((project) => {
-        //                 project.idMembers.foreach((idMember) => {
-        //                     if (idMembers.indexOf(idMember) == -1) {
-        //                         idMembers.push(idMember);
-        //                     }
-        //                 });
-        //             });
-        //             return Promise.all(
-        //                 idMembers.map((id) => {
-        //                     return apiCalls.member(Object.assign({ idMember: id }));
-        //                 })
-        //             )
-        //         })
-        // },
+        cards({ listId }) {
+            return buildApiRequest(`/lists/${listId}/cards`)
+                .then((res) => {
+                    const idMembers = [];
+                    for (var i = 0; i < res.body.length; i++) {
+                        for (var j = 0; j < res.body[i].idMembers.length; j++) {
+                            if (idMembers.indexOf(res.body[i].idMembers[j]) == -1) {
+                                idMembers.push(res.body[i].idMembers[j]);
+                            }
+                        }
+                    }
+                    return Promise.all(
+                        idMembers.map((id) => {
+                            return apiCalls.member(Object.assign({ idMember: id }));
+                        })
+                    ).then((results) => {
+                        const members = [];
+                        for (var i = 0; i < results.length; i++) {
+                            members.push(results[i].body);
+                        }
+                        return {
+                            cards: res.body,
+                            members: members
+                        }
+                    });
+                });
+        },
 
-        // member({ idMember }) {
-        //     return buildApiRequest(`/members/${idMember}`);
-        // }
+        member({ idMember }) {
+            return buildApiRequest(`/members/${idMember}`);
+        }
     }
 
     return apiCalls
