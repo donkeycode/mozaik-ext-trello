@@ -7,7 +7,8 @@ const request = require('request-promise-native')
 export default class Cards extends Component {
     static PropTypes = {
         listId: PropTypes.string.isRequired,
-		title: PropTypes.string,
+        title: PropTypes.string,
+        view: PropTypes.string,
         apiData: PropTypes.shape({
             Cards: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
         }),
@@ -23,7 +24,6 @@ export default class Cards extends Component {
 
     getMember(idMember) {
         for (var i = 0; i < this.props.apiData.members.length; i++) {
-            console.log('this.props.apiData.members[i]', this.props.apiData.members[i]);
             if (this.props.apiData.members[i].id == idMember) {
                 return this.props.apiData.members[i];
             }
@@ -56,35 +56,37 @@ export default class Cards extends Component {
     }
 
     render() {
-        const { apiData, apiError, title } = this.props;
+        const { view, apiData, apiError, title } = this.props;
 
         let body = <WidgetLoader/>;
         let count = 0;
-        console.log('apiData', apiData);
+        let viewId = view === 'tv' ? 'tv' : 'screen';
         if (apiData) {
             count = apiData.cards.length;
             body = (
                 <div id="cards">
-                    {apiData.cards.map(project =>
-                        <div className="project">
-                            <div>
-                                <p>{project.name}</p>
-                                { project.due && <p className="project-due">Fin du projet: {this.getFormatedDate(project.due)}</p>}
-                            </div>
-                            <div className="members">
-                                {project.idMembers.map(idMember =>
-                                    this.getMember(idMember).avatarHash ? (
-                                        <WidgetAvatar href={this.getMemberUrl(idMember)} size="4vmin" style={{ display: 'inlineBlock', marginLeft: '10px' }}>
-                                            <img src={this.getMemberAvatarUrl(idMember)} alt={this.getMemberFullName(idMember)} title={this.getMemberFullName(idMember)}/>
-                                        </WidgetAvatar>
-                                    ) : (
-                                        <a href={this.getMemberUrl(idMember)}  title={this.getMemberFullName(idMember)} className="initials" target="_blank">{ this.getMemberInitials(idMember)}</a>
-                                    )
+                    <div className={viewId}>
+                        {apiData.cards.map(project =>
+                            <div className="project">
+                                <div>
+                                    <p className="project-name">{project.name}</p>
+                                    { project.due && <p className="project-due">Fin du projet: {this.getFormatedDate(project.due)}</p>}
+                                </div>
+                                <div className="members">
+                                    {project.idMembers.map(idMember =>
+                                        this.getMember(idMember).avatarHash ? (
+                                            <WidgetAvatar href={this.getMemberUrl(idMember)} size="4vmin" style={{ display: 'inlineBlock', marginLeft: '10px' }}>
+                                                <img src={this.getMemberAvatarUrl(idMember)} alt={this.getMemberFullName(idMember)} title={this.getMemberFullName(idMember)}/>
+                                            </WidgetAvatar>
+                                        ) : (
+                                            <a href={this.getMemberUrl(idMember)}  title={this.getMemberFullName(idMember)} className="initials" target="_blank">{ this.getMemberInitials(idMember)}</a>
+                                        )
 
-                                )}
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             )
         }

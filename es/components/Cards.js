@@ -30,7 +30,6 @@ var Cards = function (_Component) {
 
     Cards.prototype.getMember = function getMember(idMember) {
         for (var i = 0; i < this.props.apiData.members.length; i++) {
-            console.log('this.props.apiData.members[i]', this.props.apiData.members[i]);
             if (this.props.apiData.members[i].id == idMember) {
                 return this.props.apiData.members[i];
             }
@@ -68,6 +67,7 @@ var Cards = function (_Component) {
         var _this2 = this;
 
         var _props = this.props,
+            view = _props.view,
             apiData = _props.apiData,
             apiError = _props.apiError,
             title = _props.title;
@@ -75,48 +75,52 @@ var Cards = function (_Component) {
 
         var body = React.createElement(WidgetLoader, null);
         var count = 0;
-        console.log('apiData', apiData);
+        var viewId = view === 'tv' ? 'tv' : 'screen';
         if (apiData) {
             count = apiData.cards.length;
             body = React.createElement(
                 'div',
                 { id: 'cards' },
-                apiData.cards.map(function (project) {
-                    return React.createElement(
-                        'div',
-                        { className: 'project' },
-                        React.createElement(
+                React.createElement(
+                    'div',
+                    { className: viewId },
+                    apiData.cards.map(function (project) {
+                        return React.createElement(
                             'div',
-                            null,
+                            { className: 'project' },
                             React.createElement(
-                                'p',
+                                'div',
                                 null,
-                                project.name
+                                React.createElement(
+                                    'p',
+                                    { className: 'project-name' },
+                                    project.name
+                                ),
+                                project.due && React.createElement(
+                                    'p',
+                                    { className: 'project-due' },
+                                    'Fin du projet: ',
+                                    _this2.getFormatedDate(project.due)
+                                )
                             ),
-                            project.due && React.createElement(
-                                'p',
-                                { className: 'project-due' },
-                                'Fin du projet: ',
-                                _this2.getFormatedDate(project.due)
+                            React.createElement(
+                                'div',
+                                { className: 'members' },
+                                project.idMembers.map(function (idMember) {
+                                    return _this2.getMember(idMember).avatarHash ? React.createElement(
+                                        WidgetAvatar,
+                                        { href: _this2.getMemberUrl(idMember), size: '4vmin', style: { display: 'inlineBlock', marginLeft: '10px' } },
+                                        React.createElement('img', { src: _this2.getMemberAvatarUrl(idMember), alt: _this2.getMemberFullName(idMember), title: _this2.getMemberFullName(idMember) })
+                                    ) : React.createElement(
+                                        'a',
+                                        { href: _this2.getMemberUrl(idMember), title: _this2.getMemberFullName(idMember), className: 'initials', target: '_blank' },
+                                        _this2.getMemberInitials(idMember)
+                                    );
+                                })
                             )
-                        ),
-                        React.createElement(
-                            'div',
-                            { className: 'members' },
-                            project.idMembers.map(function (idMember) {
-                                return _this2.getMember(idMember).avatarHash ? React.createElement(
-                                    WidgetAvatar,
-                                    { href: _this2.getMemberUrl(idMember), size: '4vmin', style: { display: 'inlineBlock', marginLeft: '10px' } },
-                                    React.createElement('img', { src: _this2.getMemberAvatarUrl(idMember), alt: _this2.getMemberFullName(idMember), title: _this2.getMemberFullName(idMember) })
-                                ) : React.createElement(
-                                    'a',
-                                    { href: _this2.getMemberUrl(idMember), title: _this2.getMemberFullName(idMember), className: 'initials', target: '_blank' },
-                                    _this2.getMemberInitials(idMember)
-                                );
-                            })
-                        )
-                    );
-                })
+                        );
+                    })
+                )
             );
         }
 
@@ -145,6 +149,7 @@ var Cards = function (_Component) {
 Cards.PropTypes = {
     listId: PropTypes.string.isRequired,
     title: PropTypes.string,
+    view: PropTypes.string,
     apiData: PropTypes.shape({
         Cards: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
     }),
