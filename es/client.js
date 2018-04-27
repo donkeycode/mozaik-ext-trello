@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('request-promise-native');
-var chalk = require('chalk');
+// const chalk = require('chalk')
 var config = require('./config');
 
 /**

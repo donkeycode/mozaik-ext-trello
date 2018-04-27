@@ -22,6 +22,13 @@ export default class Cards extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log('next props => ', nextProps);
+        if (!nextProps.apiData) {
+            nextProps.apiData = this.props.apiData;
+        }
+    }
+
     getMember(idMember) {
         for (var i = 0; i < this.props.apiData.members.length; i++) {
             if (this.props.apiData.members[i].id == idMember) {

@@ -28,6 +28,13 @@ var Cards = function (_Component) {
         };
     };
 
+    Cards.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+        console.log('next props => ', nextProps);
+        if (!nextProps.apiData) {
+            nextProps.apiData = this.props.apiData;
+        }
+    };
+
     Cards.prototype.getMember = function getMember(idMember) {
         for (var i = 0; i < this.props.apiData.members.length; i++) {
             if (this.props.apiData.members[i].id == idMember) {
