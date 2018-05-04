@@ -29,14 +29,16 @@ const client = mozaik => {
     }
 
     const apiCalls = {
-        cards({ listId }) {
+        cards({ listId, members_required }) {
             return buildApiRequest(`/lists/${listId}/cards`)
                 .then((res) => {
                     const idMembers = [];
-                    for (var i = 0; i < res.body.length; i++) {
-                        for (var j = 0; j < res.body[i].idMembers.length; j++) {
-                            if (idMembers.indexOf(res.body[i].idMembers[j]) == -1) {
-                                idMembers.push(res.body[i].idMembers[j]);
+                    if (members_required) {
+                        for (var i = 0; i < res.body.length; i++) {
+                            for (var j = 0; j < res.body[i].idMembers.length; j++) {
+                                if (idMembers.indexOf(res.body[i].idMembers[j]) == -1) {
+                                    idMembers.push(res.body[i].idMembers[j]);
+                                }
                             }
                         }
                     }

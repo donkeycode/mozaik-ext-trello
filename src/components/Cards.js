@@ -15,15 +15,29 @@ export default class Cards extends Component {
         apiError: PropTypes.object,
     }
 
+    constructor() {
+        super(props);
+    }
+
+    static defaultProps = {
+        last_members_required: null
+    }
+
     static getApiRequest({ listId }) {
+        var members_required = false;
+        if (!this.props.last_members_required || (this.props.last_members_required * 1000 + 3600) < (new Date() * 1000)) {
+            this.props.last_members_required = new Date();
+
+            members_required = true;
+        }
+
         return {
-            id: `trello.cards.${listId}`,
-            params: { listId }
+            id: `trello.cards.${listId}.${members_required}`,
+            params: { listId, members_required }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('next props => ', nextProps);
         if (!nextProps.apiData) {
             nextProps.apiData = this.props.apiData;
         }
@@ -35,6 +49,7 @@ export default class Cards extends Component {
                 return this.props.apiData.members[i];
             }
         }
+
         return null;
     }
 
@@ -45,16 +60,19 @@ export default class Cards extends Component {
 
     getMemberFullName(idMember) {
         const member = this.getMember(idMember);
+
         return member.fullName;
     }
 
     getMemberUrl(idMember) {
         const member = this.getMember(idMember);
+
         return member.url;
     }
 
     getMemberInitials(idMember) {
         const member = this.getMember(idMember);
+
         return member.initials;
     }
 

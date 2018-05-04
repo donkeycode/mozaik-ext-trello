@@ -16,20 +16,26 @@ var Cards = function (_Component) {
     function Cards() {
         _classCallCheck(this, Cards);
 
-        return _possibleConstructorReturn(this, _Component.apply(this, arguments));
+        return _possibleConstructorReturn(this, _Component.call(this, props));
     }
 
     Cards.getApiRequest = function getApiRequest(_ref) {
         var listId = _ref.listId;
 
+        var members_required = false;
+        if (this.props && (!this.props.last_members_required || this.props.last_members_required * 1000 + 3600 < new Date() * 1000)) {
+            this.props.last_members_required = new Date();
+
+            members_required = true;
+        }
+
         return {
-            id: 'trello.cards.' + listId,
-            params: { listId: listId }
+            id: 'trello.cards.' + listId + '.' + members_required,
+            params: { listId: listId, members_required: members_required }
         };
     };
 
     Cards.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-        console.log('next props => ', nextProps);
         if (!nextProps.apiData) {
             nextProps.apiData = this.props.apiData;
         }
@@ -41,6 +47,7 @@ var Cards = function (_Component) {
                 return this.props.apiData.members[i];
             }
         }
+
         return null;
     };
 
@@ -53,16 +60,19 @@ var Cards = function (_Component) {
 
     Cards.prototype.getMemberFullName = function getMemberFullName(idMember) {
         var member = this.getMember(idMember);
+
         return member.fullName;
     };
 
     Cards.prototype.getMemberUrl = function getMemberUrl(idMember) {
         var member = this.getMember(idMember);
+
         return member.url;
     };
 
     Cards.prototype.getMemberInitials = function getMemberInitials(idMember) {
         var member = this.getMember(idMember);
+
         return member.initials;
     };
 
@@ -161,5 +171,8 @@ Cards.PropTypes = {
         Cards: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired
     }),
     apiError: PropTypes.object
+};
+Cards.defaultProps = {
+    last_members_required: null
 };
 export default Cards;
