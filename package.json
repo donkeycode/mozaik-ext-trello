@@ -30,7 +30,7 @@
     "prop-types": "^15.5.10",
     "react-icons": "^2.2.5",
     "request": "^2.81.0",
-    "request-promise-native": "^1.0.4"
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {
     "@mozaik/babel-preset": "^1.0.0-alpha.6",
